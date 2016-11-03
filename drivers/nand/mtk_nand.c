@@ -81,6 +81,7 @@
 #if defined(__UBOOT_NAND__)
 #include <common.h>
 #include <command.h>
+#define SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL 7
 static struct nand_buffers chip_buffers;
 unsigned int CFG_BLOCKSIZE;
 #endif
@@ -124,6 +125,8 @@ static const unsigned int Samsung_OTP_Page[SAMSUNG_OTP_PAGE_NUM] = { 0x15, 0x16,
 
 static struct mtk_otp_config g_mtk_otp_fuc;
 static spinlock_t g_OTPLock;
+
+//static char  file_name_space[ARGV_LEN];
 
 #define OTP_MAGIC           'k'
 
@@ -5190,6 +5193,13 @@ int ralink_nand_command(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		mtk_nand_read_byte(mtd);
 		printf("flash id: %x %x %x %x\n", id[0], id[1], id[2], id[3]);
 	}
+	else if (!strncmp(argv[1], "write.fan", 3)) {
+                printf("---haha, fan hack!---\n");
+			
+		//this function depend on spi/nand build env? CHECK IT!!!
+                ranand_erase_write((char *)0x80100000 , 0, 0x40000);
+        }
+
 	else if (!strncmp(argv[1], "read", 5)) {
 		addr = (unsigned int)simple_strtoul(argv[2], NULL, 16);
 
